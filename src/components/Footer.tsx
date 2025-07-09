@@ -19,8 +19,12 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <Link to="/" className="text-3xl font-bold text-primary mb-4 block">
-              Claynova
+            <Link to="/" className="mb-4 block">
+              <img 
+                src="/lovable-uploads/d296c438-03af-4df4-ae2b-b485b3f87b15.png" 
+                alt="Claynova" 
+                className="h-12 w-auto"
+              />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md">
               Handcrafted polymer clay keychains made with love in India. 

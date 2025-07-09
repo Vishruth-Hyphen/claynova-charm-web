@@ -19,8 +19,12 @@ export const Navigation = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold text-primary hover:text-lilac transition-colors">
-            Claynova
+          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <img 
+              src="/lovable-uploads/d296c438-03af-4df4-ae2b-b485b3f87b15.png" 
+              alt="Claynova" 
+              className="h-8 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}
