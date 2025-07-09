@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Instagram, Mail, Heart, Send } from 'lucide-react';
+import { Instagram, Phone, Heart, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Footer = () => {
@@ -37,11 +37,13 @@ export const Footer = () => {
                 <span>@_claynova_</span>
               </a>
               <a
-                href="mailto:hello@claynova.com"
+                href="https://wa.me/+919980221242"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-muted-foreground hover:text-lilac transition-colors"
               >
-                <Mail className="w-5 h-5" />
-                <span>hello@claynova.com</span>
+                <Phone className="w-5 h-5" />
+                <span>+91 99802 21242</span>
               </a>
             </div>
           </div>
@@ -74,7 +76,7 @@ export const Footer = () => {
           </div>
 
           {/* Newsletter */}
-          <div>
+          {/* <div>
             <h3 className="text-lg font-semibold text-foreground mb-4">Stay Updated</h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Subscribe to get updates on new collections and special offers
@@ -97,7 +99,7 @@ export const Footer = () => {
                 </button>
               </div>
             </form>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom Section */}
