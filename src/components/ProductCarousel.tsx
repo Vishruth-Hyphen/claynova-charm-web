@@ -1,51 +1,9 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ProductCard } from './ProductCard';
+import { Product, getFeaturedProducts } from '../data/products';
 
-// Import keychain images
-import keychain1 from '../assets/keychain-1.jpg';
-import keychain2 from '../assets/keychain-2.jpg';
-import keychain3 from '../assets/keychain-3.jpg';
-import keychain4 from '../assets/keychain-4.jpg';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-}
-
-const featuredProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Floral Delight',
-    price: 499,
-    image: keychain1,
-    description: 'Beautiful lilac keychain with handcrafted white flowers and gold accents',
-  },
-  {
-    id: '2',
-    name: 'Personalized Initial',
-    price: 549,
-    image: keychain2,
-    description: 'Sky blue keychain with your custom initial and pearl details',
-  },
-  {
-    id: '3',
-    name: 'Geometric Charm',
-    price: 479,
-    image: keychain3,
-    description: 'Beige keychain with minimal geometric patterns and dried flowers',
-  },
-  {
-    id: '4',
-    name: 'Blossom Beauty',
-    price: 525,
-    image: keychain4,
-    description: 'Soft pink keychain with delicate cherry blossom pattern',
-  },
-];
+const featuredProducts = getFeaturedProducts();
 
 interface ProductCarouselProps {
   onProductClick?: (product: Product) => void;

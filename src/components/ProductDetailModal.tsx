@@ -8,6 +8,7 @@ interface ProductDetailModalProps {
     price: number;
     image: string;
     description: string;
+    isCustomizable?: boolean;
   };
   isOpen: boolean;
   onClose: () => void;
@@ -29,13 +30,13 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
   ];
 
   const handleBuyNow = () => {
-    const customText = customization.hasCustomization
+    const customText = product.isCustomizable && customization.hasCustomization
       ? `\n\nCustomization:\n- Initial: ${customization.initial || 'None'}\n- Color Theme: ${colorThemes.find(t => t.id === customization.colorTheme)?.name || 'Original'}`
       : '';
     
     const message = `Hi! I'm interested in buying the "${product.name}" keychain (₹${product.price}).${customText}`;
     
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/+919980221242?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -58,11 +59,13 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
         <div className="p-6">
           {/* Product Image */}
           <div className="mb-6">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-80 object-cover rounded-xl"
-            />
+            <div className="w-full h-80 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
           </div>
 
           {/* Product Info */}
@@ -77,12 +80,13 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
             <p className="text-muted-foreground leading-relaxed">{product.description}</p>
           </div>
 
-          {/* Customization Options */}
-          <div className="mb-6 p-4 bg-gradient-accent rounded-xl">
-            <div className="flex items-center space-x-2 mb-4">
-              <Palette className="w-5 h-5 text-lilac" />
-              <h3 className="font-semibold text-foreground">Customize Your Keychain</h3>
-            </div>
+          {/* Customization Options - Only show if product is customizable */}
+          {product.isCustomizable && (
+            <div className="mb-6 p-4 bg-gradient-accent rounded-xl">
+              <div className="flex items-center space-x-2 mb-4">
+                <Palette className="w-5 h-5 text-lilac" />
+                <h3 className="font-semibold text-foreground">Customize Your Keychain</h3>
+              </div>
             
             <div className="space-y-4">
               {/* Toggle Customization */}
@@ -145,7 +149,8 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
                 </>
               )}
             </div>
-          </div>
+            </div>
+          )}
 
           {/* Buy Now Button */}
           <button
@@ -154,7 +159,7 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
           >
             <MessageCircle className="w-5 h-5" />
             <span>
-              Buy Now - ₹{product.price + (customization.hasCustomization ? 50 : 0)}
+              Buy Now - ₹{product.price + (product.isCustomizable && customization.hasCustomization ? 50 : 0)}
             </span>
           </button>
 

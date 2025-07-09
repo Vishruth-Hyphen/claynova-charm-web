@@ -4,74 +4,7 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductDetailModal } from '../components/ProductDetailModal';
 import { Footer } from '../components/Footer';
 import { Search, Filter, SlidersHorizontal } from 'lucide-react';
-
-// Import all keychain images
-import keychain1 from '../assets/keychain-1.jpg';
-import keychain2 from '../assets/keychain-2.jpg';
-import keychain3 from '../assets/keychain-3.jpg';
-import keychain4 from '../assets/keychain-4.jpg';
-import keychain5 from '../assets/keychain-5.jpg';
-import keychain6 from '../assets/keychain-6.jpg';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-  category: string;
-}
-
-const products: Product[] = [
-  {
-    id: '1',
-    name: 'Floral Delight',
-    price: 499,
-    image: keychain1,
-    description: 'Beautiful lilac keychain with handcrafted white flowers and gold accents',
-    category: 'floral',
-  },
-  {
-    id: '2',
-    name: 'Personalized Initial A',
-    price: 549,
-    image: keychain2,
-    description: 'Sky blue keychain with your custom initial and pearl details',
-    category: 'personalized',
-  },
-  {
-    id: '3',
-    name: 'Geometric Charm',
-    price: 479,
-    image: keychain3,
-    description: 'Beige keychain with minimal geometric patterns and dried flowers',
-    category: 'geometric',
-  },
-  {
-    id: '4',
-    name: 'Blossom Beauty',
-    price: 525,
-    image: keychain4,
-    description: 'Soft pink keychain with delicate cherry blossom pattern',
-    category: 'floral',
-  },
-  {
-    id: '5',
-    name: 'Personalized Initial M',
-    price: 549,
-    image: keychain5,
-    description: 'Mint green keychain with custom initial and minimal dot pattern',
-    category: 'personalized',
-  },
-  {
-    id: '6',
-    name: 'Lavender Dreams',
-    price: 495,
-    image: keychain6,
-    description: 'Soft lavender keychain with small flowers and elegant design',
-    category: 'floral',
-  },
-];
+import { Product, products } from '../data/products';
 
 export const Shop = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -82,9 +15,10 @@ export const Shop = () => {
 
   const categories = [
     { id: 'all', name: 'All Products' },
-    { id: 'floral', name: 'Floral' },
-    { id: 'personalized', name: 'Personalized' },
-    { id: 'geometric', name: 'Geometric' },
+    { id: 'personalized', name: 'Personalized' }, 
+    { id: 'kawaii', name: 'Kawaii' },
+    { id: 'sea', name: 'Sea' },
+    { id: 'winter', name: 'Winter' },
   ];
 
   const filteredProducts = products.filter((product) => {
@@ -120,7 +54,7 @@ export const Shop = () => {
               Our Collection
             </h1>
             <p className="text-lg text-muted-foreground">
-              Discover unique handcrafted polymer clay keychains, each one lovingly made just for you
+              Discover unique handcrafted clay keychains, each one lovingly made just for you
             </p>
           </div>
         </div>

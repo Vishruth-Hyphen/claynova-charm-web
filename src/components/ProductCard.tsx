@@ -5,21 +5,23 @@ interface ProductCardProps {
   id: string;
   name: string;
   price: number;
+  originalPrice: number;
   image: string;
   description: string;
+  isCustomizable?: boolean;
   onClick?: () => void;
 }
 
-export const ProductCard = ({ id, name, price, image, description, onClick }: ProductCardProps) => {
+export const ProductCard = ({ id, name, price, originalPrice, image, description, onClick }: ProductCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
     <div className="group relative bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-hover transition-all duration-300 hover:scale-105 cursor-pointer">
-      <div className="relative overflow-hidden" onClick={onClick}>
+      <div className="relative overflow-hidden bg-gray-50" onClick={onClick}>
         <img
           src={image}
           alt={name}
-          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+          className="w-full h-64 object-contain group-hover:scale-105 transition-transform duration-300"
         />
         
         {/* Overlay */}
@@ -53,7 +55,7 @@ export const ProductCard = ({ id, name, price, image, description, onClick }: Pr
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-xl font-bold text-lilac">₹{price}</span>
-            <span className="text-sm text-muted-foreground line-through">₹{price + 100}</span>
+            <span className="text-sm text-muted-foreground line-through">₹{originalPrice}</span>
           </div>
           
           <button

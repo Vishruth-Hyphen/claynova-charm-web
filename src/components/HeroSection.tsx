@@ -26,7 +26,7 @@ export const HeroSection = () => {
 
           {/* Description */}
           <p className="text-lg text-muted-foreground mb-10 max-w-3xl mx-auto animate-fade-in">
-            Discover our collection of unique polymer clay keychains, each lovingly handcrafted 
+            Discover our collection of unique clay keychains, each lovingly handcrafted 
             with attention to detail. From personalized initials to whimsical patterns, 
             every piece tells a story.
           </p>
