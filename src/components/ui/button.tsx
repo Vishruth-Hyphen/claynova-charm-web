@@ -18,6 +18,10 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // Custom brand variants
+        lilac: "bg-lilac text-white hover:bg-lilac-dark shadow-soft hover:shadow-hover transition-all duration-300",
+        premium: "bg-gradient-accent text-foreground hover:shadow-soft border border-border hover:border-lilac/50 transition-all duration-300",
+        floating: "bg-white/20 hover:bg-white/30 text-foreground border border-white/30 backdrop-blur-sm hover:shadow-soft transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
