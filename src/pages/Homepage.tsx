@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Navigation } from '../components/Navigation';
 import { HeroSection } from '../components/HeroSection';
 import { ProductCarousel } from '../components/ProductCarousel';
-import { Testimonials } from '../components/Testimonials';
+// import { Testimonials } from '../components/Testimonials';
 import { Footer } from '../components/Footer';
 import { ProductDetailModal } from '../components/ProductDetailModal';
 
@@ -33,7 +33,7 @@ export const Homepage = () => {
       <Navigation />
       <HeroSection />
       <ProductCarousel onProductClick={handleProductClick} />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Footer />
       
       {selectedProduct && (
