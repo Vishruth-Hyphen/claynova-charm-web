@@ -23,18 +23,18 @@ export const Footer = () => {
               Claynova
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md">
-              Handcrafted polymer clay keychains made with love in India. 
+              Handcrafted clay keychains made with love in India. 
               Each piece is unique and tells its own story.
             </p>
             <div className="flex items-center space-x-4">
               <a
-                href="https://instagram.com/claynova"
+                href="https://instagram.com/_claynova_"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-muted-foreground hover:text-lilac transition-colors"
               >
                 <Instagram className="w-5 h-5" />
-                <span>@claynova</span>
+                <span>@_claynova_</span>
               </a>
               <a
                 href="mailto:hello@claynova.com"

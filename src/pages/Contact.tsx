@@ -28,7 +28,7 @@ Subject: ${formData.subject}
 Message:
 ${formData.message}`;
 
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(whatsappMessage)}`;
+    const whatsappUrl = `https://wa.me/+919980221242?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -36,8 +36,8 @@ ${formData.message}`;
     {
       icon: MessageCircle,
       title: 'WhatsApp',
-      content: '+91 98765 43210',
-      action: () => window.open('https://wa.me/919876543210', '_blank'),
+      content: '+91 9980221242',
+      action: () => window.open('https://wa.me/+919980221242', '_blank'),
     },
     {
       icon: Mail,
@@ -48,8 +48,8 @@ ${formData.message}`;
     {
       icon: Instagram,
       title: 'Instagram',
-      content: '@claynova',
-      action: () => window.open('https://instagram.com/claynova', '_blank'),
+      content: '@_claynova_',
+      action: () => window.open('https://instagram.com/_claynova_', '_blank'),
     },
     {
       icon: MapPin,
