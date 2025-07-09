@@ -51,12 +51,6 @@ ${formData.message}`;
       content: '@_claynova_',
       action: () => window.open('https://instagram.com/_claynova_', '_blank'),
     },
-    {
-      icon: MapPin,
-      title: 'Location',
-      content: 'Made in India',
-      action: null,
-    },
   ];
 
   return (
