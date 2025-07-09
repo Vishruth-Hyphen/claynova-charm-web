@@ -14,16 +14,9 @@ export const HeroSection = () => {
               <Sparkles className="w-4 h-4 text-lilac" />
               <span className="text-sm font-medium text-foreground">Handcrafted with Love</span>
             </div>
-            <div className="flex flex-col items-center mb-4 animate-fade-in">
-              <img 
-                src="/lovable-uploads/d296c438-03af-4df4-ae2b-b485b3f87b15.png" 
-                alt="Claynova" 
-                className="h-20 lg:h-28 w-auto mb-4"
-              />
-              <h1 className="text-5xl lg:text-7xl font-bold text-foreground">
-                Clay<span className="text-lilac">nova</span>
-              </h1>
-            </div>
+            <h1 className="text-5xl lg:text-7xl font-bold text-foreground mb-4 animate-fade-in">
+              Clay<span className="text-lilac">nova</span>
+            </h1>
           </div>
 
           {/* Tagline */}
