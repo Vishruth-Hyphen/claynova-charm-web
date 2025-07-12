@@ -59,11 +59,11 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
         <div className="p-6">
           {/* Product Image */}
           <div className="mb-6">
-            <div className="w-full h-80 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden">
+            <div className="w-full max-w-md mx-auto aspect-[2/3] bg-gray-50 rounded-xl overflow-hidden">
               <img
                 src={product.image}
                 alt={product.name}
-                className="max-w-full max-h-full object-contain"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>

@@ -14,14 +14,24 @@ interface ProductCardProps {
 
 export const ProductCard = ({ id, name, price, originalPrice, image, description, onClick }: ProductCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <div className="group relative bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-hover transition-all duration-300 hover:scale-105 cursor-pointer">
-      <div className="relative overflow-hidden bg-gray-50" onClick={onClick}>
+      <div className="relative overflow-hidden bg-gray-50 aspect-[3/4]" onClick={onClick}>
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+            <div className="w-12 h-12 bg-gray-300 rounded-lg"></div>
+          </div>
+        )}
         <img
           src={image}
           alt={name}
-          className="w-full h-64 object-contain group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-300 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         />
         
         {/* Overlay */}
