@@ -4,7 +4,8 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductDetailModal } from '../components/ProductDetailModal';
 import { Footer } from '../components/Footer';
 import { Search, Filter, SlidersHorizontal } from 'lucide-react';
-import { Product, products } from '../data/products';
+import { useProducts } from '../hooks/useProducts';
+import { Product } from '../services/productService';
 
 export const Shop = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -12,6 +13,8 @@ export const Shop = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<'all' | 'under500' | 'over500'>('all');
+  
+  const { data: products = [], isLoading, error } = useProducts();
 
   const categories = [
     { id: 'all', name: 'All Products' },
@@ -47,14 +50,14 @@ export const Shop = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="bg-gradient-hero py-16">
+      <section className="py-16 bg-gradient-hero">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="text-center">
             <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
               Our Collection
             </h1>
-            <p className="text-lg text-muted-foreground">
-              Discover unique handcrafted clay keychains, each one lovingly made just for you
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Discover our complete range of handcrafted clay keychains, each one unique and made with love
             </p>
           </div>
         </div>
@@ -63,16 +66,16 @@ export const Shop = () => {
       {/* Filters Section */}
       <section className="py-8 bg-card border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search keychains..."
+                placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-full border border-border bg-background focus:outline-none focus:ring-2 focus:ring-lilac focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 rounded-full border border-border bg-background focus:outline-none focus:ring-2 focus:ring-lilac focus:border-transparent transition-all"
               />
             </div>
 
@@ -82,7 +85,7 @@ export const Shop = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 rounded-full border border-border bg-background focus:outline-none focus:ring-2 focus:ring-lilac"
+                className="px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-lilac focus:border-transparent transition-all"
               >
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
@@ -98,7 +101,7 @@ export const Shop = () => {
               <select
                 value={priceRange}
                 onChange={(e) => setPriceRange(e.target.value as 'all' | 'under500' | 'over500')}
-                className="px-4 py-2 rounded-full border border-border bg-background focus:outline-none focus:ring-2 focus:ring-lilac"
+                className="px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-lilac focus:border-transparent transition-all"
               >
                 <option value="all">All Prices</option>
                 <option value="under500">Under ₹500</option>
@@ -109,10 +112,31 @@ export const Shop = () => {
         </div>
       </section>
 
-      {/* Products Grid */}
+      {/* Products Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="bg-card rounded-2xl overflow-hidden shadow-card animate-pulse">
+                  <div className="h-64 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded mb-4"></div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 bg-gray-200 rounded w-20"></div>
+                      <div className="h-8 bg-gray-200 rounded w-16"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-16">
+              <h3 className="text-2xl font-semibold text-foreground mb-4">Failed to load products</h3>
+              <p className="text-muted-foreground">Please try again later</p>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16">
               <h3 className="text-2xl font-semibold text-foreground mb-4">No products found</h3>
               <p className="text-muted-foreground">Try adjusting your search or filters</p>
