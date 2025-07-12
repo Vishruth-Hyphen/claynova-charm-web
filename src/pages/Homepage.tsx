@@ -5,14 +5,7 @@ import { ProductCarousel } from '../components/ProductCarousel';
 // import { Testimonials } from '../components/Testimonials';
 import { Footer } from '../components/Footer';
 import { ProductDetailModal } from '../components/ProductDetailModal';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-}
+import { Product } from '../services/productService';
 
 export const Homepage = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);

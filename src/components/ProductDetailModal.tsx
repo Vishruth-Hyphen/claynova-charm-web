@@ -6,6 +6,7 @@ interface ProductDetailModalProps {
     id: string;
     name: string;
     price: number;
+    originalPrice: number;
     image: string;
     description: string;
     isCustomizable?: boolean;
@@ -74,8 +75,8 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
             <div className="flex items-center justify-between mb-4">
               <span className="text-3xl font-bold text-lilac">₹{product.price}</span>
               <div className="text-right">
-                <span className="text-sm text-muted-foreground line-through">₹{product.price + 100}</span>
-                <div className="text-sm text-green-600 font-medium">Save ₹100</div>
+                <span className="text-sm text-muted-foreground line-through">₹{product.originalPrice}</span>
+                <div className="text-sm text-green-600 font-medium">Save ₹{product.originalPrice - product.price}</div>
               </div>
             </div>
             <p className="text-muted-foreground leading-relaxed">{product.description}</p>
