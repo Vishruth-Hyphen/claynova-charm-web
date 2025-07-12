@@ -44,9 +44,9 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-hover">
+      <div className="bg-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-hover flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
+        <div className="flex items-center justify-between p-6 border-b border-border flex-shrink-0">
           <h2 className="text-2xl font-bold text-foreground">{product.name}</h2>
           <button
             onClick={onClose}
@@ -56,7 +56,8 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
           </button>
         </div>
 
-        <div className="p-6">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6 pb-4">
           {/* Product Image */}
           <div className="mb-6">
             <div className="w-full max-w-md mx-auto aspect-[2/3] bg-gray-50 rounded-xl overflow-hidden">
@@ -151,8 +152,10 @@ export const ProductDetailModal = ({ product, isOpen, onClose }: ProductDetailMo
             </div>
             </div>
           )}
+        </div>
 
-          {/* Buy Now Button */}
+        {/* Sticky Footer with Buy Button */}
+        <div className="border-t border-border p-6 bg-card flex-shrink-0">
           <button
             onClick={handleBuyNow}
             className="w-full bg-lilac hover:bg-lilac-dark text-white py-4 rounded-full font-medium transition-all duration-300 hover:shadow-hover flex items-center justify-center space-x-2"
