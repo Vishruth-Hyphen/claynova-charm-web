@@ -14,6 +14,7 @@ export const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<'all' | 'under500' | 'over500'>('all');
   
+  // Only visible products are fetched from the database
   const { data: products = [], isLoading, error } = useProducts();
 
   const categories = [
@@ -24,6 +25,7 @@ export const Shop = () => {
     { id: 'winter', name: 'Winter' },
   ];
 
+  // Filter products by search, category, and price (visibility is handled at database level)
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchQuery.toLowerCase());

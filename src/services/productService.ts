@@ -10,6 +10,7 @@ export interface Product {
   category: string
   isFeatured: boolean
   isCustomizable: boolean
+  isVisible: boolean
   priority?: number | null
   createdAt?: string
   updatedAt?: string
@@ -26,16 +27,18 @@ const transformProduct = (row: any): Product => ({
   category: row.category,
   isFeatured: row.is_featured,
   isCustomizable: row.is_customizable,
+  isVisible: row.is_visible,
   priority: row.priority,
   createdAt: row.created_at,
   updatedAt: row.updated_at,
 })
 
-// Get all products
+// Get all products (only visible ones)
 export const getAllProducts = async (): Promise<Product[]> => {
   const { data, error } = await supabase
     .from('products')
     .select('*')
+    .eq('is_visible', true)
     .order('priority', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
 
@@ -47,12 +50,13 @@ export const getAllProducts = async (): Promise<Product[]> => {
   return data.map(transformProduct)
 }
 
-// Get featured products
+// Get featured products (only visible ones)
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   const { data, error } = await supabase
     .from('products')
     .select('*')
     .eq('is_featured', true)
+    .eq('is_visible', true)
     .order('priority', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
 
@@ -64,11 +68,12 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
   return data.map(transformProduct)
 }
 
-// Get products by category
+// Get products by category (only visible ones)
 export const getProductsByCategory = async (category: string): Promise<Product[]> => {
   let query = supabase
     .from('products')
     .select('*')
+    .eq('is_visible', true)
 
   if (category !== 'all') {
     query = query.eq('category', category)
@@ -120,6 +125,7 @@ export const createProduct = async (product: Omit<Product, 'id' | 'createdAt' | 
       category: product.category,
       is_featured: product.isFeatured,
       is_customizable: product.isCustomizable,
+      is_visible: product.isVisible,
       priority: product.priority,
     })
     .select()
@@ -145,6 +151,7 @@ export const updateProduct = async (id: string, updates: Partial<Product>): Prom
   if (updates.category !== undefined) updateData.category = updates.category
   if (updates.isFeatured !== undefined) updateData.is_featured = updates.isFeatured
   if (updates.isCustomizable !== undefined) updateData.is_customizable = updates.isCustomizable
+  if (updates.isVisible !== undefined) updateData.is_visible = updates.isVisible
   if (updates.priority !== undefined) updateData.priority = updates.priority
 
   const { data, error } = await supabase

@@ -24,6 +24,7 @@ export interface Database {
           category: string
           is_featured: boolean
           is_customizable: boolean
+          is_visible: boolean
           priority: number | null
           created_at: string
           updated_at: string
@@ -38,6 +39,7 @@ export interface Database {
           category: string
           is_featured?: boolean
           is_customizable?: boolean
+          is_visible?: boolean
           priority?: number | null
           created_at?: string
           updated_at?: string
@@ -52,6 +54,7 @@ export interface Database {
           category?: string
           is_featured?: boolean
           is_customizable?: boolean
+          is_visible?: boolean
           priority?: number | null
           updated_at?: string
         }
