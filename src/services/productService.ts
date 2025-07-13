@@ -1,4 +1,6 @@
 import { supabase } from '../lib/supabase'
+import { uploadProductImage, deleteProductImage, ImageUploadResult } from './imageUploadService'
+import { generateProductContentWithFallback, AIGeneratedContent } from './aiService'
 
 export interface Product {
   id: string
@@ -39,6 +41,22 @@ export const getAllProducts = async (): Promise<Product[]> => {
     .from('products')
     .select('*')
     .eq('is_visible', true)
+    .order('priority', { ascending: true, nullsFirst: false })
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching products:', error)
+    throw new Error('Failed to fetch products')
+  }
+
+  return data.map(transformProduct)
+}
+
+// Get all products including hidden ones (admin only)
+export const getAllProductsAdmin = async (): Promise<Product[]> => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
     .order('priority', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
 
@@ -180,4 +198,221 @@ export const deleteProduct = async (id: string): Promise<void> => {
     console.error('Error deleting product:', error)
     throw new Error('Failed to delete product')
   }
-} 
+}
+
+// Enhanced product creation with image upload and AI generation
+export interface CreateProductWithImageData {
+  imageFile: File
+  price: number
+  originalPrice: number
+  priority?: number
+  isVisible: boolean
+  isFeatured: boolean
+  isCustomizable?: boolean
+  // Optional manual overrides
+  manualTitle?: string
+  manualDescription?: string
+  manualCategory?: string
+}
+
+export interface CreateProductResult {
+  product?: Product
+  success: boolean
+  error?: string
+  imageUploadResult?: ImageUploadResult
+  aiResult?: AIGeneratedContent
+}
+
+export const createProductWithImage = async (
+  data: CreateProductWithImageData
+): Promise<CreateProductResult> => {
+  try {
+    // Step 1: Upload image
+    const imageUploadResult = await uploadProductImage(data.imageFile)
+    
+    if (!imageUploadResult.success) {
+      return {
+        success: false,
+        error: imageUploadResult.error || 'Failed to upload image',
+        imageUploadResult
+      }
+    }
+
+    // Step 2: Generate AI content (if manual overrides not provided)
+    let aiResult: AIGeneratedContent | undefined
+    let title = data.manualTitle || ''
+    let description = data.manualDescription || ''
+    let category = data.manualCategory || 'kawaii'
+
+    if (!data.manualTitle || !data.manualDescription || !data.manualCategory) {
+      aiResult = await generateProductContentWithFallback(
+        data.imageFile,
+        data.price,
+        data.originalPrice
+      )
+
+      if (aiResult.success) {
+        title = data.manualTitle || aiResult.title
+        description = data.manualDescription || aiResult.description
+        category = data.manualCategory || aiResult.category
+      } else {
+        // If AI fails and no manual content provided, use fallbacks
+        title = data.manualTitle || 'Handcrafted Keychain'
+        description = data.manualDescription || 'Beautiful handcrafted clay keychain made with love.'
+        category = data.manualCategory || 'kawaii'
+      }
+    }
+
+    // Step 3: Create product in database
+    const productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'> = {
+      name: title,
+      price: data.price,
+      originalPrice: data.originalPrice,
+      image: imageUploadResult.url,
+      description: description,
+      category: category,
+      isFeatured: data.isFeatured,
+      isCustomizable: data.isCustomizable || false,
+      isVisible: data.isVisible,
+      priority: data.priority || null
+    }
+
+    const product = await createProduct(productData)
+
+    return {
+      product,
+      success: true,
+      imageUploadResult,
+      aiResult
+    }
+  } catch (error) {
+    console.error('Error in createProductWithImage:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'An unexpected error occurred'
+    }
+  }
+}
+
+// Enhanced product update with optional image replacement
+export interface UpdateProductWithImageData {
+  id: string
+  imageFile?: File // Optional: only if replacing image
+  price?: number
+  originalPrice?: number
+  priority?: number
+  isVisible?: boolean
+  isFeatured?: boolean
+  isCustomizable?: boolean
+  name?: string
+  description?: string
+  category?: string
+  // AI regeneration options
+  regenerateWithAI?: boolean
+}
+
+export const updateProductWithImage = async (
+  data: UpdateProductWithImageData
+): Promise<CreateProductResult> => {
+  try {
+    let imageUploadResult: ImageUploadResult | undefined
+    let aiResult: AIGeneratedContent | undefined
+    let updates: Partial<Product> = {}
+
+    // Get current product data
+    const currentProduct = await getProductById(data.id)
+    if (!currentProduct) {
+      return {
+        success: false,
+        error: 'Product not found'
+      }
+    }
+
+    // Step 1: Handle image upload if new image provided
+    if (data.imageFile) {
+      imageUploadResult = await uploadProductImage(data.imageFile)
+      
+      if (!imageUploadResult.success) {
+        return {
+          success: false,
+          error: imageUploadResult.error || 'Failed to upload image',
+          imageUploadResult
+        }
+      }
+
+      updates.image = imageUploadResult.url
+
+      // Delete old image if it exists and is different
+      if (currentProduct.image && currentProduct.image !== imageUploadResult.url) {
+        // Extract path from URL for deletion
+        const urlParts = currentProduct.image.split('/product-images/')
+        if (urlParts.length > 1) {
+          const imagePath = 'products/' + urlParts[1].split('?')[0]
+          await deleteProductImage(imagePath)
+        }
+      }
+    }
+
+    // Step 2: Handle AI regeneration if requested
+    if (data.regenerateWithAI && (data.imageFile || currentProduct.image)) {
+      const fileToAnalyze = data.imageFile
+      
+      if (fileToAnalyze) {
+        aiResult = await generateProductContentWithFallback(
+          fileToAnalyze,
+          data.price || currentProduct.price,
+          data.originalPrice || currentProduct.originalPrice
+        )
+
+        if (aiResult.success) {
+          if (!data.name) updates.name = aiResult.title
+          if (!data.description) updates.description = aiResult.description
+          if (!data.category) updates.category = aiResult.category
+        }
+      }
+    }
+
+    // Step 3: Apply manual updates
+    if (data.price !== undefined) updates.price = data.price
+    if (data.originalPrice !== undefined) updates.originalPrice = data.originalPrice
+    if (data.priority !== undefined) updates.priority = data.priority
+    if (data.isVisible !== undefined) updates.isVisible = data.isVisible
+    if (data.isFeatured !== undefined) updates.isFeatured = data.isFeatured
+    if (data.isCustomizable !== undefined) updates.isCustomizable = data.isCustomizable
+    if (data.name !== undefined) updates.name = data.name
+    if (data.description !== undefined) updates.description = data.description
+    if (data.category !== undefined) updates.category = data.category
+
+    // Step 4: Update product in database
+    const product = await updateProduct(data.id, updates)
+
+    return {
+      product,
+      success: true,
+      imageUploadResult,
+      aiResult
+    }
+  } catch (error) {
+    console.error('Error in updateProductWithImage:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'An unexpected error occurred'
+    }
+  }
+}
+
+// Get all categories used in products
+export const getProductCategories = async (): Promise<string[]> => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('category')
+    .eq('is_visible', true)
+
+  if (error) {
+    console.error('Error fetching categories:', error)
+    return ['personalized', 'kawaii', 'sea', 'winter'] // Default categories
+  }
+
+  const categories = [...new Set(data.map(item => item.category))]
+  return categories.length > 0 ? categories : ['personalized', 'kawaii', 'sea', 'winter']
+}
