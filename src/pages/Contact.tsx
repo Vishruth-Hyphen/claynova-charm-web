@@ -186,27 +186,6 @@ ${formData.message}`;
                 </div>
               </div>
 
-              {/* Business Hours */}
-              <div className="bg-card rounded-2xl p-6 shadow-card">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Clock className="w-6 h-6 text-lilac" />
-                  <h3 className="text-xl font-semibold text-foreground">Business Hours</h3>
-                </div>
-                <div className="space-y-2 text-muted-foreground">
-                  <div className="flex justify-between">
-                    <span>Monday - Friday</span>
-                    <span>9:00 AM - 6:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Saturday</span>
-                    <span>10:00 AM - 4:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Sunday</span>
-                    <span>Closed</span>
-                  </div>
-                </div>
-              </div>
 
               {/* Custom Orders Info */}
               <div className="bg-gradient-card rounded-2xl p-6">
