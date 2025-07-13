@@ -48,31 +48,27 @@ export const generateProductContent = async (
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
     
     const base64Image = await fileToBase64(imageFile)
     
     const prompt = `
-You are a product content creator for "Claynova", a brand that sells handcrafted clay keychains made with love in India. 
 
 Analyze this product image and generate:
-1. A creative, appealing product title (2-4 words, catchy and memorable)
-2. A warm, engaging product description (8-10 words, that says a unique story about the keychain)
-3. A category from these options: "personalized", "kawaii", "sea", "winter"
+1. A creative, appealing product title (2-4 words, catchy and memorable) It should be a name of the character, e.g "Bubbletide Octo Buddy", "Bugs Bunny", "Squeaky Santa", etc. 
+2. A warm, engaging product description (8-10 words, that says a unique story about the character/product in question), e.g "A cute octopus that loves to play in the ocean"
+3. A category from these options: "kawaii", "sea", "winter"
 
 The product is priced at ₹${price} (original price ₹${originalPrice}).
 
 Guidelines:
 - Keep the tone warm, friendly, and artisanal
-- Emphasize the handcrafted quality and unique charm
-- Make it feel personal and special
-- Use descriptive, sensory language
 - Categories: "personalized" for custom/initial items, "kawaii" for cute/adorable items, "sea" for ocean/marine themes, "winter" for cold weather/cozy themes
 
 Return your response in this exact JSON format:
 {
   "title": "Your creative title here",
-  "description": "Your warm, engaging description here",
+  "description": "Your warm, engaging 8-10 words description here",
   "category": "one of: personalized, kawaii, sea, winter"
 }
 `
@@ -160,12 +156,24 @@ export const generateProductContentWithFallback = async (
       const base64Image = await fileToBase64(imageFile)
       
       const simplePrompt = `
-Look at this handcrafted clay keychain image. Create a JSON response with:
-- title: 2-3 word product name
-- description: 1-2 sentences about this cute keychain
-- category: choose from "personalized", "kawaii", "sea", "winter"
 
-Format: {"title": "...", "description": "...", "category": "..."}
+Analyze this product image and generate:
+1. A creative, appealing product title (2-4 words, catchy and memorable) It should be a name of the character, e.g "Bubbletide Octo Buddy", "Bugs Bunny", "Squeaky Santa", etc. 
+2. A warm, engaging product description (8-10 words, that says a unique story about the character/product in question), e.g "A cute octopus that loves to play in the ocean" DO NOT SAY "Handcrafted Clay Keychain", "Made with love", etc. The desc should purely be about the charater or product in question.
+3. A category from these options: "kawaii", "sea", "winter"
+
+The product is priced at ₹${price} (original price ₹${originalPrice}).
+
+Guidelines:
+- Keep the tone warm, friendly, and artisanal
+- Categories: "personalized" for custom/initial items, "kawaii" for cute/adorable items, "sea" for ocean/marine themes, "winter" for cold weather/cozy themes
+
+Return your response in this exact JSON format:
+{
+  "title": "Your creative title here",
+  "description": "Your warm, engaging description here",
+  "category": "one of: personalized, kawaii, sea, winter"
+}
 `
 
       const result = await model.generateContent([
@@ -185,9 +193,9 @@ Format: {"title": "...", "description": "...", "category": "..."}
       if (jsonMatch) {
         const parsedResponse = JSON.parse(jsonMatch[0])
         return {
-          title: parsedResponse.title || 'Handcrafted Keychain',
-          description: parsedResponse.description || 'Beautiful handcrafted clay keychain made with love.',
-          category: parsedResponse.category || 'kawaii',
+          title: parsedResponse.title,
+          description: parsedResponse.description,
+          category: parsedResponse.category,
           success: true
         }
       }

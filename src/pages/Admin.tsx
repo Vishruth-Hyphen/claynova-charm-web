@@ -23,9 +23,11 @@ import {
   CheckCircle,
   Loader2,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  LogOut
 } from 'lucide-react'
 import { ProductForm } from '../components/ProductForm'
+import { AdminAuth } from '../components/AdminAuth'
 import { Navigation } from '../components/Navigation'
 import { Footer } from '../components/Footer'
 import { 
@@ -38,6 +40,7 @@ import {
 import { toast } from '../hooks/use-toast'
 
 export const Admin = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<string[]>([])
@@ -101,10 +104,23 @@ export const Admin = () => {
     setFilteredProducts(filtered)
   }, [products, searchQuery, selectedCategory, showHidden])
 
-  // Load data on component mount
+  // Check authentication on component mount
   useEffect(() => {
-    loadData()
+    const authStatus = sessionStorage.getItem('adminAuth')
+    if (authStatus === 'true') {
+      setIsAuthenticated(true)
+      loadData()
+    } else {
+      setIsAuthenticated(false)
+    }
   }, [])
+
+  // Load data when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadData()
+    }
+  }, [isAuthenticated])
 
   const handleProductSuccess = (product: Product) => {
     setIsAddDialogOpen(false)
@@ -187,6 +203,11 @@ export const Admin = () => {
         variant: "destructive"
       })
     }
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('adminAuth')
+    setIsAuthenticated(false)
   }
 
   const ProductCard = ({ product }: { product: Product }) => (
@@ -312,6 +333,11 @@ export const Admin = () => {
     </Card>
   )
 
+  // Show authentication screen if not authenticated
+  if (!isAuthenticated) {
+    return <AdminAuth onAuthenticated={() => setIsAuthenticated(true)} />
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -329,8 +355,18 @@ export const Admin = () => {
                 Manage your product catalog, visibility, and featured items
               </p>
             </div>
+
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
             
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="lg">
                   <Plus className="h-5 w-5 mr-2" />
@@ -345,8 +381,9 @@ export const Admin = () => {
                   onSuccess={handleProductSuccess}
                   onCancel={() => setIsAddDialogOpen(false)}
                 />
-              </DialogContent>
-            </Dialog>
+                              </DialogContent>
+              </Dialog>
+            </div>
           </div>
 
           {/* Stats */}
