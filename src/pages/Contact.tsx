@@ -42,8 +42,8 @@ ${formData.message}`;
     {
       icon: Mail,
       title: 'Email',
-      content: 'hello@claynova.com',
-      action: () => window.open('mailto:hello@claynova.com', '_blank'),
+      content: 'varshini3275@gmail.com',
+      action: () => window.open('mailto:varshini3275@gmail.com', '_blank'),
     },
     {
       icon: Instagram,
